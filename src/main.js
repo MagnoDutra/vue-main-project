@@ -9,9 +9,11 @@ import CoachBase from './components/UI/CoachBase.vue';
 import BaseButton from './components/UI/BaseButton.vue';
 import BaseBadge from './components/UI/BaseBadge.vue';
 import BaseSpinner from './components/UI/BaseSpinner.vue';
+import BaseDialog from './components/UI/BaseDialog.vue';
 
 const app = createApp(App)
 
+app.component('base-dialog', BaseDialog);
 app.component('base-spinner', BaseSpinner);
 app.component('card-base', CardBase);
 app.component('coach-base', CoachBase);

@@ -1,4 +1,7 @@
 <template>
+  <base-dialog :show="!!error" title="An error occurred!" @close="handleError">
+    <p>{{ error }}</p>
+  </base-dialog>
   <section>
     <card-base>
       <h2>Find Your Coach</h2>
@@ -8,7 +11,7 @@
   <section>
     <card-base>
       <div class="list-nav">
-        <base-button mode="outline" @click="refreshCoaches">Refresh</base-button>
+        <base-button mode="outline" @click="refreshCoaches(true)">Refresh</base-button>
         <base-button link to="/register" v-if="!isCoach && !isLoading">Register as Coach</base-button>
       </div>
       <div v-if="isLoading">
@@ -39,6 +42,7 @@ export default {
   },
   data() {
     return {
+      error: null,
       isLoading: false,
       activeFilters: {
         frontend: true,
@@ -71,9 +75,16 @@ export default {
     },
   },
   methods: {
-    async refreshCoaches(){
+    handleError(){
+      this.error = null;
+    },
+    async refreshCoaches(refresh = false){
       this.isLoading = true;
-      await this.$store.dispatch('coaches/loadCoaches');
+      try {
+        await this.$store.dispatch('coaches/loadCoaches', {forceRefresh: refresh});
+      } catch(error) {
+        this.error = error.message || 'Something went wrong';
+      }
       this.isLoading = false;
     },
     setFilters(updatedFilters) {
